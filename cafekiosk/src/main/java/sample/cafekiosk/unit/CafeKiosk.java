@@ -15,8 +15,14 @@ public class CafeKiosk {
     private static final LocalTime SHOP_CLOSE_TIME = LocalTime.of(22, 0);
     private final List<Beverage> beverages = new ArrayList<>();
 
-    public void add(Beverage beverage) {
-        beverages.add(beverage);
+    public void add(Beverage beverage, int count) {
+        if (count <= 0){
+            throw new IllegalArgumentException("음료는 1잔 이상 주문하실 수 있습니다.");
+        }
+
+        for (int i = 0; i < count; i ++) {
+            beverages.add(beverage);
+        }
     }
 
     public void remove(Beverage beverage){

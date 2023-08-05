@@ -10,9 +10,9 @@ class CafeKioskTest {
     @Test
     void add() {
         CafeKiosk cafeKiosk = new CafeKiosk();
-        Beverage Latte = new Latte();
+        Beverage latte = new Latte();
 
-        cafeKiosk.add(Latte);
+        cafeKiosk.add(latte, 1);
         /**
          * 1. 자동화되지 않은 테스트라는 것은, 아래와 같이 콘솔에 직접 찍어서 직접 확인하는 테스트를 의미한다.
          *    이번 학습 기록에서는 직접 콘솔에 찍어 확인하지 않고도 테스트를 자동화하는 것을 돕는 도구인 Junit에 대해서 학습한다.
@@ -34,11 +34,31 @@ class CafeKioskTest {
     }
 
     @Test
+    void addSeveralBeverages() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Beverage latte = new Latte();
+
+        cafeKiosk.add(latte, 2);
+
+        Assertions.assertThat(cafeKiosk.getBeverages().get(0)).isEqualTo(latte);
+        Assertions.assertThat(cafeKiosk.getBeverages().get(1)).isEqualTo(latte);
+    }
+
+    @Test
+    void addZeroBeverages() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+
+        // 예외 발생
+        Assertions.assertThatThrownBy(() -> cafeKiosk.add(americano, 0)).isInstanceOf(IllegalArgumentException.class).hasMessage("음료는 1잔 이상 주문하실 수 있습니다.");
+    }
+
+    @Test
     void remove(){
         CafeKiosk cafeKiosk = new CafeKiosk();
         Beverage latte = new Latte();
 
-        cafeKiosk.add(latte);
+        cafeKiosk.add(latte, 1);
         Assertions.assertThat(cafeKiosk.getBeverages()).hasSize(1);
 
         cafeKiosk.remove(latte);
@@ -51,8 +71,8 @@ class CafeKioskTest {
         Beverage latte = new Latte();
         Beverage americano = new Americano();
 
-        cafeKiosk.add(latte);
-        cafeKiosk.add(americano);
+        cafeKiosk.add(latte, 1);
+        cafeKiosk.add(americano, 1);
         Assertions.assertThat(cafeKiosk.getBeverages()).hasSize(2);
 
         cafeKiosk.clear();
