@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Beverage;
 import sample.cafekiosk.unit.beverage.Latte;
+import sample.cafekiosk.unit.order.Order;
+
+import java.time.LocalDateTime;
 
 class CafeKioskTest {
     @Test
@@ -77,5 +80,29 @@ class CafeKioskTest {
 
         cafeKiosk.clear();
         Assertions.assertThat(cafeKiosk.getBeverages()).hasSize(0);
+    }
+
+
+    @Test
+    void createOrder(){
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano, 1);
+
+        Order order = cafeKiosk.createOreder(LocalDateTime.of(2023, 8, 6, 10, 0));
+
+        Assertions.assertThat(order.getBeverages()).hasSize(1);
+        Assertions.assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+
+    @Test
+    void createOrderOutsideOpenTime(){
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano, 1);
+
+        Assertions.assertThatThrownBy(() -> cafeKiosk.createOreder(LocalDateTime.of(2023, 8, 6, 9, 59)))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요.");
     }
 }

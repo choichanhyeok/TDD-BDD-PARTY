@@ -43,14 +43,23 @@ public class CafeKiosk {
         return totalPrice;
     }
 
-    public Order createOreder(){
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalTime localTime = currentDateTime.toLocalTime();
+//    public Order createOreder(){
+//        LocalDateTime currentDateTime = LocalDateTime.now();
+//        LocalTime localTime = currentDateTime.toLocalTime();
+//
+//        if (localTime.isBefore(SHOP_OPEN_TIME)|| localTime.isAfter(SHOP_CLOSE_TIME)){
+//            throw new IllegalArgumentException("주문 시간이 아닙니다. 관리자에게 문의하세요.");
+//        }
+//
+//
+//        return new Order(currentDateTime, beverages);
+//    }
 
+    public Order createOreder(LocalDateTime currentDateTime){
+        LocalTime localTime = currentDateTime.toLocalTime();
         if (localTime.isBefore(SHOP_OPEN_TIME)|| localTime.isAfter(SHOP_CLOSE_TIME)){
             throw new IllegalArgumentException("주문 시간이 아닙니다. 관리자에게 문의하세요.");
         }
-
 
         return new Order(currentDateTime, beverages);
     }
