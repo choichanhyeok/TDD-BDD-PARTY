@@ -25,29 +25,9 @@ class ProductRepositoryTest {
     @Test
     void findAllBySellingStatusIn(){
         //given
-        Product product1 = Product.builder()
-                                    .productNumber("001")
-                                    .productType(HANDMADE)
-                                    .sellingStatus(SELLING)
-                                    .name("아메리카노")
-                                    .price(4000)
-                                    .build();
-
-        Product product2 = Product.builder()
-                .productNumber("002")
-                .productType(HANDMADE)
-                .sellingStatus(HOLD)
-                .name("카페라떼")
-                .price(4500)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .productType(HANDMADE)
-                .sellingStatus(STOP_SELLING)
-                .name("팥빙수")
-                .price(4000)
-                .build();
+        Product product1 = createProduct("001", HANDMADE, SELLING,"아메리카노", 4000);
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
+        Product product3 = createProduct("003", HANDMADE, STOP_SELLING, "팥빙수", 4000);
 
         productRepository.saveAll(List.of(product1, product2, product3));
 
@@ -62,29 +42,11 @@ class ProductRepositoryTest {
     @Test
     void findAllByProductNumberIn(){
         //given
-        Product product1 = Product.builder()
-                .productNumber("001")
-                .productType(HANDMADE)
-                .sellingStatus(SELLING)
-                .name("아메리카노")
-                .price(4000)
-                .build();
+        Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
 
-        Product product2 = Product.builder()
-                .productNumber("002")
-                .productType(HANDMADE)
-                .sellingStatus(HOLD)
-                .name("카페라떼")
-                .price(4500)
-                .build();
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
 
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .productType(HANDMADE)
-                .sellingStatus(STOP_SELLING)
-                .name("팥빙수")
-                .price(4000)
-                .build();
+        Product product3 = createProduct("003", HANDMADE, STOP_SELLING, "팥빙수", 4000);
 
         productRepository.saveAll(List.of(product1, product2, product3));
 
@@ -94,6 +56,45 @@ class ProductRepositoryTest {
         // then
         assertThat(products).hasSize(2).extracting("productNumber", "name", "sellingStatus").containsExactlyInAnyOrder(tuple("001", "아메리카노", SELLING), tuple("002", "카페라떼", HOLD));
 
+    }
+
+    @DisplayName("가장 마지막으로 저장할 상품의 상품번호를 읽어온다.")
+    @Test
+    void findLatestProductNumber(){
+        //given
+        Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
+
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
+
+        String targetProduct = "003";
+        Product product3 = createProduct(targetProduct, HANDMADE, STOP_SELLING, "팥빙수", 4000);
+
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+        // then
+        assertThat(latestProductNumber).isEqualTo(targetProduct);
+    }
+
+    @DisplayName("가장 마지막으로 저장할 상품의 상품번호를 읽어올 때 상품이 하나도 없는 경우에는 null 반환")
+    @Test
+    void findLatestProductNumberWhenProductIsEmpty(){
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+        // then
+        assertThat(latestProductNumber).isNull();
+    }
+
+    private Product createProduct(String productNumber, ProductType productType, SellingStatus sellingStatus, String name, int price) {
+        Product product1 = Product.builder()
+                .productNumber(productNumber)
+                .productType(productType)
+                .sellingStatus(sellingStatus)
+                .name(name)
+                .price(price)
+                .build();
+        return product1;
     }
 
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
@@ -73,7 +72,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registedDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registedDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -104,7 +103,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registedDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registedDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -138,7 +137,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registedDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registedDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -183,7 +182,7 @@ class OrderServiceTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderService.createOrder(request, registedDateTime))
+        assertThatThrownBy(() -> orderService.createOrder(request.toServiceRequest(), registedDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 부족한 상품이 있습니다.");
     }
@@ -197,5 +196,4 @@ class OrderServiceTest {
                 .price(price)
                 .build();
     }
-
 }
